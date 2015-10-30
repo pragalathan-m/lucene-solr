@@ -31,9 +31,9 @@ package org.apache.lucene.util;
  * @lucene.internal
  */
 public abstract class PriorityQueue<T> {
-  private int size = 0;
-  private final int maxSize;
-  private final T[] heap;
+  protected int size;
+  protected final int maxSize;
+  protected final T[] heap;
 
   public PriorityQueue(int maxSize) {
     this(maxSize, true);
@@ -129,7 +129,7 @@ public abstract class PriorityQueue<T> {
    * 
    * @return the new 'top' element in the queue.
    */
-  public final T add(T element) {
+  public T add(T element) {
     size++;
     heap[size] = element;
     upHeap(size);
@@ -152,8 +152,8 @@ public abstract class PriorityQueue<T> {
       return null;
     } else if (size > 0 && !lessThan(element, heap[1])) {
       T ret = heap[1];
-      heap[1] = element;
-      updateTop();
+        heap[1] = element;
+        updateTop();
       return ret;
     } else {
       return element;
@@ -170,7 +170,7 @@ public abstract class PriorityQueue<T> {
 
   /** Removes and returns the least element of the PriorityQueue in log(size)
     time. */
-  public final T pop() {
+  public  T pop() {
     if (size > 0) {
       T result = heap[1];       // save first value
       heap[1] = heap[size];     // move last to first
@@ -221,7 +221,7 @@ public abstract class PriorityQueue<T> {
   }
 
   /** Removes all entries from the PriorityQueue. */
-  public final void clear() {
+  public void clear() {
     for (int i = 0; i <= size; i++) {
       heap[i] = null;
     }
@@ -251,7 +251,7 @@ public abstract class PriorityQueue<T> {
     return false;
   }
 
-  private final boolean upHeap(int origPos) {
+  protected boolean upHeap(int origPos) {
     int i = origPos;
     T node = heap[i];          // save bottom node
     int j = i >>> 1;
@@ -264,7 +264,7 @@ public abstract class PriorityQueue<T> {
     return i != origPos;
   }
   
-  private final void downHeap(int i) {
+  protected void downHeap(int i) {
     T node = heap[i];          // save top node
     int j = i << 1;            // find smaller child
     int k = j + 1;

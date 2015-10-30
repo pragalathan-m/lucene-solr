@@ -39,7 +39,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
   // always compare lower than a real hit; this would
   // save having to check queueFull on each insert
 
-  private static abstract class OneComparatorLeafCollector implements LeafCollector {
+  static abstract class OneComparatorLeafCollector implements LeafCollector {
 
     final LeafFieldComparator comparator;
     final int reverseMul;
@@ -57,7 +57,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
     }
   }
 
-  private static abstract class MultiComparatorLeafCollector implements LeafCollector {
+  static abstract class MultiComparatorLeafCollector implements LeafCollector {
 
     final LeafFieldComparator[] comparators;
     final int[] reverseMul;
@@ -125,7 +125,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
    * Implements a TopFieldCollector over one SortField criteria, without
    * tracking document scores and maxScore.
    */
-  private static class NonScoringCollector extends TopFieldCollector {
+  static class NonScoringCollector extends TopFieldCollector {
 
     final FieldValueHitQueue<Entry> queue;
 
@@ -212,7 +212,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
    * Implements a TopFieldCollector over one SortField criteria, while tracking
    * document scores but no maxScore.
    */
-  private static class ScoringNoMaxScoreCollector extends TopFieldCollector {
+  static class ScoringNoMaxScoreCollector extends TopFieldCollector {
 
     final FieldValueHitQueue<Entry> queue;
 
@@ -311,7 +311,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
    * Implements a TopFieldCollector over one SortField criteria, with tracking
    * document scores and maxScore.
    */
-  private static class ScoringMaxScoreCollector extends TopFieldCollector {
+  static class ScoringMaxScoreCollector extends TopFieldCollector {
 
     final FieldValueHitQueue<Entry> queue;
 
@@ -406,7 +406,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
   /*
    * Implements a TopFieldCollector when after != null.
    */
-  private final static class PagingFieldCollector extends TopFieldCollector {
+  static class PagingFieldCollector extends TopFieldCollector {
 
     int collectedHits;
     final FieldValueHitQueue<Entry> queue;
@@ -648,7 +648,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
     }
   }
 
-  final void add(int slot, int doc, float score) {
+  void add(int slot, int doc, float score) {
     bottom = pq.add(new Entry(slot, docBase + doc, score));
     queueFull = totalHits == numHits;
   }
@@ -659,7 +659,7 @@ public abstract class TopFieldCollector extends TopDocsCollector<Entry> {
     bottom = pq.updateTop();
   }
 
-  final void updateBottom(int doc, float score) {
+  void updateBottom(int doc, float score) {
     bottom.doc = docBase + doc;
     bottom.score = score;
     bottom = pq.updateTop();

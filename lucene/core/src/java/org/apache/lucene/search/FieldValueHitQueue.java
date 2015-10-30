@@ -20,7 +20,7 @@ package org.apache.lucene.search;
 import java.io.IOException;
 
 import org.apache.lucene.index.LeafReaderContext;
-import org.apache.lucene.util.PriorityQueue;
+import org.apache.lucene.util.StoreDocPriorityQueue;
 
 /**
  * Expert: A hit queue for sorting by hits by terms in more than one field.
@@ -29,7 +29,7 @@ import org.apache.lucene.util.PriorityQueue;
  * @since 2.9
  * @see IndexSearcher#search(Query,int,Sort)
  */
-public abstract class FieldValueHitQueue<T extends FieldValueHitQueue.Entry> extends PriorityQueue<T> {
+public abstract class FieldValueHitQueue<T extends FieldValueHitQueue.Entry> extends StoreDocPriorityQueue<T> {
 
   /**
    * Extension of ScoreDoc to also store the 
@@ -53,7 +53,7 @@ public abstract class FieldValueHitQueue<T extends FieldValueHitQueue.Entry> ext
    * An implementation of {@link FieldValueHitQueue} which is optimized in case
    * there is just one comparator.
    */
-  private static final class OneComparatorFieldValueHitQueue<T extends FieldValueHitQueue.Entry> extends FieldValueHitQueue<T> {
+  static class OneComparatorFieldValueHitQueue<T extends FieldValueHitQueue.Entry> extends FieldValueHitQueue<T> {
     
     private final int oneReverseMul;
     private final FieldComparator<?> oneComparator;
@@ -94,7 +94,7 @@ public abstract class FieldValueHitQueue<T extends FieldValueHitQueue.Entry> ext
    * An implementation of {@link FieldValueHitQueue} which is optimized in case
    * there is more than one comparator.
    */
-  private static final class MultiComparatorsFieldValueHitQueue<T extends FieldValueHitQueue.Entry> extends FieldValueHitQueue<T> {
+  static class MultiComparatorsFieldValueHitQueue<T extends FieldValueHitQueue.Entry> extends FieldValueHitQueue<T> {
 
     public MultiComparatorsFieldValueHitQueue(SortField[] fields, int size)
         throws IOException {
@@ -123,7 +123,7 @@ public abstract class FieldValueHitQueue<T extends FieldValueHitQueue.Entry> ext
   }
   
   // prevent instantiation and extension.
-  private FieldValueHitQueue(SortField[] fields, int size) throws IOException {
+  FieldValueHitQueue(SortField[] fields, int size) throws IOException {
     super(size);
     // When we get here, fields.length is guaranteed to be > 0, therefore no
     // need to check it again.
