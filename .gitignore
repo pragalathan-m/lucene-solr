@@ -24,7 +24,7 @@ parent.iml
 /bin.*
 /nbproject
 /nb-build
-
+/maven-build/**/target
 /solr/package
 
 # can this be minimized?
